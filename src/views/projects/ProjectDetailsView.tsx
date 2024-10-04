@@ -1,5 +1,6 @@
 import {getProjectById} from '@/api/ProjectAPI';
 import AddTaskModal from '@/components/tasks/AddTaskModal';
+import {TaskList} from '@/components/tasks/TaskList';
 import {useQuery} from '@tanstack/react-query';
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 export const ProjectDetailsView = () => {
@@ -18,7 +19,7 @@ export const ProjectDetailsView = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <Navigate to="/404" />;
-
+  console.log(data.tasks);
   if (data)
     return (
       <>
@@ -36,6 +37,7 @@ export const ProjectDetailsView = () => {
             Add Task
           </button>
         </nav>
+        <TaskList tasks={data.tasks} />
         <AddTaskModal />
       </>
     );
