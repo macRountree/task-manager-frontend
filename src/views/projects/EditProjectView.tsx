@@ -12,6 +12,7 @@ export const EditProjectView = () => {
     queryFn: () => getProjectById(projectId),
 
     retry: false, //*try to refetch the data if the query fails
+    refetchInterval: 5000,
   });
   //   console.log(`${error}, isError: ${isError}`);
 

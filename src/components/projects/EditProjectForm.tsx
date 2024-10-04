@@ -11,7 +11,7 @@ interface EditProjectFormProps {
 }
 
 export const EditProjectForm = ({data, projectId}: EditProjectFormProps) => {
-  console.log(data);
+  console.log(data, 'data EditProjectForm');
 
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ export const EditProjectForm = ({data, projectId}: EditProjectFormProps) => {
     },
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: ['projects']});
-      queryClient.invalidateQueries({queryKey: ['editProjects', projectId]});
+      queryClient.invalidateQueries({queryKey: ['editProject', projectId]});
       //* invalidate the query to refetch the data
       toast.success(data);
       navigate('/');
