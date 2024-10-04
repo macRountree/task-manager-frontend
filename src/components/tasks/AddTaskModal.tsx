@@ -1,15 +1,56 @@
 import {Fragment} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {replace, useLocation, useNavigate, useParams} from 'react-router-dom';
+import {useForm} from 'react-hook-form';
+import {TaskFormData} from '@/interfaces/index';
+import TaskForm from './TaskForm';
+import {useMutation} from '@tanstack/react-query';
+import {createTask} from '@/api/TaskAPI';
+import {toast} from 'react-toastify';
 
 export default function AddTaskModal() {
   const navigate = useNavigate();
+
   const location = useLocation(); //*read data objet from the location object
   const queryParams = new URLSearchParams(location.search); //*search property of the location object
   const modalTask = queryParams.get('newTask');
   //   console.log(modalTask);
   const showModal = modalTask ? true : false;
+  //*useForm hook to register the form inputs
 
+  //*get ProjectID by useParams
+  const params = useParams();
+  const projectId = params.projectId!;
+  const initialValues: TaskFormData = {
+    taskName: '',
+    description: '',
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({defaultValues: initialValues});
+
+  const {mutate, reset} = useMutation({
+    mutationFn: createTask,
+    onError: error => {
+      toast.error(error.message);
+    },
+    onSuccess: data => {
+      toast.success(data);
+      reset(); //*reset the form after the task is created
+      navigate(location.pathname, {replace: true});
+    },
+  });
+
+  const handleTaskForm = (taskData: TaskFormData) => {
+    const data = {
+      taskData,
+      projectId,
+    };
+    mutate(data);
+  };
   return (
     <>
       <Transition appear show={showModal} as={Fragment}>
@@ -52,6 +93,19 @@ export default function AddTaskModal() {
                     Fill out the following form to create{' '}
                     <span className="text-amber-600">a task</span>
                   </p>
+                  <form
+                    action=""
+                    className="mt-10 space-y-3 "
+                    onSubmit={handleSubmit(handleTaskForm)}
+                    noValidate
+                  >
+                    <TaskForm register={register} errors={errors} />
+                    <input
+                      type="submit"
+                      value="Add Task"
+                      className=" bg-amber-600 hover:bg-amber-700 w-full p-3 text-white font-bold rounded-lg cursor-pointer transition-colors"
+                    />{' '}
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
