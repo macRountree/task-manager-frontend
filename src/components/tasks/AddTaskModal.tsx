@@ -20,6 +20,7 @@ export default function AddTaskModal() {
   //*get ProjectID by useParams
   const params = useParams();
   const projectId = params.projectId!;
+  console.log(projectId);
   const initialValues: TaskFormData = {
     taskName: '',
     description: '',
@@ -28,20 +29,24 @@ export default function AddTaskModal() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: {errors},
   } = useForm({defaultValues: initialValues});
 
   const queryClient = useQueryClient();
-  const {mutate, reset} = useMutation({
+  const {mutate} = useMutation({
     mutationFn: createTask,
     onError: error => {
       toast.error(error.message);
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); //*invalidate the query to refetch the data
+      queryClient.invalidateQueries({
+        queryKey: ['editProject', projectId],
+        refetchType: 'active',
+      }); //*invalidate the query to refetch the data
       toast.success(data);
-      reset(); //*reset the form after the task is created
-      navigate(location.pathname, {replace: true});
+      reset(initialValues); //*reset the form after the task is created
+      navigate(location.pathname);
     },
   });
 
