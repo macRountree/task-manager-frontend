@@ -1,5 +1,25 @@
 import {z} from 'zod';
 
+//*Auth and Users Schema
+export const authSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string().min(8),
+  password_confirmation: z.string(),
+  token: z.string(),
+});
+
+type Auth = z.infer<typeof authSchema>;
+export type UserLoginForm = Pick<Auth, 'email' | 'password'>;
+export type UserRegistrationForm = Pick<
+  Auth,
+  'name' | 'email' | 'password' | 'password_confirmation'
+>;
+export type RequestConfirmationCodeForm = Pick<Auth, 'email'>;
+export type ForgotPasswordForm = Pick<Auth, 'email'>;
+export type NewPasswordFormu = Pick<Auth, 'password' | 'password_confirmation'>;
+export type TokenConfirmation = Pick<Auth, 'token'>; //* create Token Type for state of Token
+//*Task Schema
 export const taskStatusSchema = z.enum([
   'pending',
   'onHold',
