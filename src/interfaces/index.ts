@@ -4,7 +4,7 @@ import {z} from 'zod';
 export const authSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string(),
   password_confirmation: z.string(),
   token: z.string(),
 });
@@ -19,6 +19,19 @@ export type RequestConfirmationCodeForm = Pick<Auth, 'email'>;
 export type ForgotPasswordForm = Pick<Auth, 'email'>;
 export type NewPasswordFormu = Pick<Auth, 'password' | 'password_confirmation'>;
 export type TokenConfirmation = Pick<Auth, 'token'>; //* create Token Type for state of Token
+
+//*User Schema
+export const userSchema = authSchema
+  .pick({
+    name: true,
+    email: true,
+  })
+  .extend({
+    _id: z.string(),
+  });
+
+export type User = z.infer<typeof userSchema>;
+
 //*Task Schema
 export const taskStatusSchema = z.enum([
   'pending',
@@ -66,3 +79,14 @@ export type ProjectFormData = Pick<
   Project,
   'clientName' | 'projectName' | 'description'
 >;
+
+//*Project Team Schema
+export const teamMemberSchema = userSchema.pick({
+  _id: true,
+  name: true,
+  email: true,
+});
+
+export const teamMembersSchema = z.array(teamMemberSchema);
+export type TeamMember = z.infer<typeof teamMemberSchema>;
+export type TeamMemberForm = Pick<TeamMember, 'email'>;

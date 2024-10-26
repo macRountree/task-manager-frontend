@@ -13,7 +13,8 @@
       "@/api/*": ["api/*"],
       "@/interfaces/*": ["interfaces/*"],
       "@/lib/*": ["lib/*"],
-      "@/helpers/*": ["helpers/*"]
+      "@/helpers/*": ["helpers/*"],
+      "@/hooks/*": ["hooks/*"]
     },
 
     /* Bundler mode */

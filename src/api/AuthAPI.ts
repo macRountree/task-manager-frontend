@@ -7,6 +7,7 @@ import {
   TokenConfirmation,
   UserLoginForm,
   UserRegistrationForm,
+  userSchema,
 } from '../interfaces/index';
 export async function registerUser(formaData: UserRegistrationForm) {
   try {
@@ -50,6 +51,7 @@ export async function login(formData: UserLoginForm) {
   try {
     const url = '/auth/login';
     const {data} = await api.post<string>(url, formData);
+    localStorage.setItem('LOGIN_TOKEN', data);
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -92,6 +94,22 @@ export async function updatePasswordWithToken({
   try {
     const url = `/auth/update-password/${token}`;
     const {data} = await api.post<string>(url, formData);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+  }
+}
+
+export async function getUser() {
+  try {
+    const url = '/auth/user';
+    const {data} = await api(url);
+    const response = userSchema.safeParse(data);
+    if (response.success) {
+      return response.data;
+    }
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
