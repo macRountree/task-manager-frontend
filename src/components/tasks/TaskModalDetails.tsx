@@ -46,8 +46,8 @@ export default function TaskModalDetails() {
     mutate(data);
   };
 
-  console.log(data);
-  console.log(isError, 'isError');
+  // console.log(data);
+  // console.log(isError, 'isError');
   if (isError) {
     toast.error(error.message, {toastId: 'error'}); //*toastId is used to prevent duplicate toasts
     return <Navigate to={`/projects/${projectId}`} />;
@@ -104,9 +104,24 @@ export default function TaskModalDetails() {
                     >
                       {data.taskName}
                     </Dialog.Title>
-                    <p className="text-lg text-slate-500 mb-2">
+                    <p className="text-lg text-slate-500 mb-2 font-bold">
                       Description: {data.description}{' '}
                     </p>
+                    <p className="text-lg text-slate-500 mb-2 font-bold">
+                      Log Changes:
+                    </p>
+
+                    <ul className="list-decimal">
+                      {data.completedBy.map(log => (
+                        <li key={log._id}>
+                          <span className="font-bold text-slate-600">
+                            {' '}
+                            Last Updated By :{' '}
+                          </span>{' '}
+                          {log.user.name} - {log.status}
+                        </li>
+                      ))}
+                    </ul>
                     <div className="my-5 space-y-3">
                       <label className="font-bold">Status:</label>
                       <select

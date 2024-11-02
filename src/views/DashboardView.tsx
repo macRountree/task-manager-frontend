@@ -5,8 +5,11 @@ import {Link} from 'react-router-dom';
 import {EllipsisVerticalIcon} from '@heroicons/react/20/solid';
 import {deleteProject, getAllProjects} from '@/api/ProjectAPI';
 import {toast} from 'react-toastify';
+import {useAuth} from '@/hooks/useAuth';
+import {isManager} from '@/helpers/policies';
 export const DashboardView = () => {
-  const {data} = useQuery({
+  const {data: user, isLoading: authLoading} = useAuth();
+  const {data, isLoading} = useQuery({
     queryKey: ['projects'], //* key to identify the query , in this case is projects, need to be unique
     queryFn: getAllProjects, //* function to be executed
   });
@@ -21,8 +24,11 @@ export const DashboardView = () => {
       queryClient.invalidateQueries({queryKey: ['projects']});
     },
   });
+
+  console.log(data, 'data Dashhboard');
   // console.log(data, isLoading);
-  if (data)
+  if (isLoading && authLoading) return <p>Loading...</p>;
+  if (data && user)
     return (
       <>
         <h1 className="text-5xl  font-black"> My Projects</h1>
@@ -52,6 +58,16 @@ export const DashboardView = () => {
               >
                 <div className="flex min-w-0 gap-x-4">
                   <div className="min-w-0 flex-auto space-y-2">
+                    {isManager(project.manager, user._id) ? (
+                      <p className="bg-green-600 text-center py-1 px-5 text-white font-bold rounded-md text-xs">
+                        {' '}
+                        Manager{' '}
+                      </p>
+                    ) : (
+                      <p className="bg-blue-600 text-center py-1 px-5 text-white font-bold rounded-lg text-xs">
+                        Member
+                      </p>
+                    )}
                     <Link
                       to={`/projects/${project._id}`}
                       className="text-gray-600 cursor-pointer hover:underline text-3xl font-bold"
@@ -93,25 +109,30 @@ export const DashboardView = () => {
                             Project Details
                           </Link>
                         </Menu.Item>
-                        <Menu.Item>
-                          <Link
-                            to={`/projects/${project._id}/edit`}
-                            className="block px-3 py-1 text-sm leading-6 text-gray-900"
-                          >
-                            Edit Project
-                          </Link>
-                        </Menu.Item>
-                        <Menu.Item>
-                          <button
-                            type="button"
-                            className="block px-3 py-1 text-sm leading-6 text-red-500"
-                            onClick={() => {
-                              mutate(project._id);
-                            }}
-                          >
-                            Delete Project
-                          </button>
-                        </Menu.Item>
+
+                        {project.manager === user._id && (
+                          <>
+                            <Menu.Item>
+                              <Link
+                                to={`/projects/${project._id}/edit`}
+                                className="block px-3 py-1 text-sm leading-6 text-gray-900"
+                              >
+                                Edit Project
+                              </Link>
+                            </Menu.Item>
+                            <Menu.Item>
+                              <button
+                                type="button"
+                                className="block px-3 py-1 text-sm leading-6 text-red-500"
+                                onClick={() => {
+                                  mutate(project._id);
+                                }}
+                              >
+                                Delete Project
+                              </button>
+                            </Menu.Item>
+                          </>
+                        )}
                       </Menu.Items>
                     </Transition>
                   </Menu>

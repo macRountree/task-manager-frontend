@@ -49,6 +49,13 @@ export const TaskSchema = z.object({
   description: z.string(),
   project: z.string(),
   status: taskStatusSchema, //*need start with pending
+  completedBy: z.array(
+    z.object({
+      _id: z.string(),
+      user: userSchema,
+      status: taskStatusSchema,
+    })
+  ),
   createdAt: z.string(), //* check The Database
   updatedAt: z.string(), //* check The Database
 });
@@ -62,6 +69,7 @@ export const ProjectSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   description: z.string(),
+  manager: z.string(userSchema.pick({_id: true})),
 });
 
 export const dashboardProjectSchema = z.array(
@@ -70,6 +78,7 @@ export const dashboardProjectSchema = z.array(
     projectName: true,
     clientName: true,
     description: true,
+    manager: true,
   })
 );
 

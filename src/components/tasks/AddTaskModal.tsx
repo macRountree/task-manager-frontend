@@ -20,7 +20,7 @@ export default function AddTaskModal() {
   //*get ProjectID by useParams
   const params = useParams();
   const projectId = params.projectId!;
-  console.log(projectId);
+  // console.log(projectId);
   const initialValues: TaskFormData = {
     taskName: '',
     description: '',

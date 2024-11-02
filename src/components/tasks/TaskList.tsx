@@ -3,6 +3,7 @@ import {TaskCard} from './TaskCard';
 
 interface TaskListProps {
   tasks: Task[];
+  canEdit: boolean;
 }
 type GroupedTasks = {
   [key: string]: Task[];
@@ -30,13 +31,13 @@ const statusColors: {[key: string]: string} = {
   completed: 'border-t-green-500',
 };
 
-export const TaskList = ({tasks}: TaskListProps) => {
+export const TaskList = ({tasks, canEdit}: TaskListProps) => {
   const groupedTasks = tasks.reduce((acc, task) => {
     let currentGroup = acc[task.status] ? [...acc[task.status]] : [];
     currentGroup = [...currentGroup, task];
     return {...acc, [task.status]: currentGroup};
   }, initialStatusGroups);
-  console.log(groupedTasks);
+  // console.log(groupedTasks);
   return (
     <>
       <h2 className="text-5xl font-black my-10">Tasks</h2>
@@ -56,7 +57,9 @@ export const TaskList = ({tasks}: TaskListProps) => {
                   No task in this project
                 </li>
               ) : (
-                tasks.map(task => <TaskCard key={task._id} task={task} />)
+                tasks.map(task => (
+                  <TaskCard key={task._id} task={task} canEdit={canEdit} />
+                ))
               )}
             </ul>
           </div>

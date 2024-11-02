@@ -18,7 +18,7 @@ export const EditTaskData = () => {
     queryFn: () => getTaskById({projectId, taskId}),
     enabled: !!taskId, //*
   });
-  console.log(data, 'from EditTaskData');
+  // console.log(data, 'from EditTaskData');
 
   if (data) return <EditTaskModal data={data} taskId={taskId} />;
 };

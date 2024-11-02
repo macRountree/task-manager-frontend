@@ -7,9 +7,9 @@ import {useAuth} from '@/hooks/useAuth';
 
 export const AppLayout = () => {
   const {data, isError, isLoading} = useAuth();
-  console.log(data);
-  console.log(isError);
-  console.log(isLoading);
+  // console.log(data);
+  // console.log(isError);
+  // console.log(isLoading);
 
   if (isLoading) return 'Loading...';
   if (isError) {
