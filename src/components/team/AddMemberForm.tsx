@@ -35,7 +35,6 @@ export default function AddMemberForm() {
     reset();
     mutation.reset();
   };
-
   return (
     <>
       <form

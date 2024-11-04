@@ -1,5 +1,5 @@
-import api from '@/lib/axios';
 import {isAxiosError} from 'axios';
+import api from '@/lib/axios';
 import {
   Project,
   TeamMember,
@@ -21,7 +21,7 @@ export async function findUserByEmail({
 }) {
   try {
     const url = `/projects/${projectId}/team/find`;
-    const {data} = await api.post<string>(url, formData);
+    const {data} = await api.post(url, formData);
     console.log(data);
     return data;
   } catch (error) {
