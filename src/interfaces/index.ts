@@ -125,9 +125,9 @@ export type ProjectFormData = Pick<
 
 //*Project Team Schema
 export const teamMemberSchema = userSchema.pick({
-  _id: true,
   name: true,
   email: true,
+  _id: true,
 });
 
 export const teamMembersSchema = z.array(teamMemberSchema);
